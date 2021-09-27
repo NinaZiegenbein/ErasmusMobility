@@ -1,0 +1,23 @@
+{
+  "name": "erasmusmobility",
+  "version": "1.0.0",
+  "description": "Visualizing Erasmus mobility as part of our Datavisualization Course at Aarhus university.",
+  "main": "database_connection.js",
+  "dependencies": {
+    "mysql": "8.0.26"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NinaZiegenbein/ErasmusMobility.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NinaZiegenbein/ErasmusMobility/issues"
+  },
+  "homepage": "https://github.com/NinaZiegenbein/ErasmusMobility#readme"
+}
