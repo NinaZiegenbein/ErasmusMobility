@@ -51,17 +51,23 @@
 
   const viz2 = vl__default["default"]
   .markBar({ tooltip: true })
+    .params(
+      // interactive parameter for the current year, bind to an internal slider
+      vl__default["default"].param('Year').value(2014).bind(vl__default["default"].slider(2014, 2016, 1))
+    ) 
+  .transform(
+      vl__default["default"].filter('datum.year === Year')
+  ) 
     .encode(
       vl__default["default"].y().fieldN('Sending Country Code')
-      .scale({domain: ['DK', 'DE', 'FR', 'SW', 'NO']})
+        .title('Sending Country Code'),
+      vl__default["default"].x().fieldQ('Number')
+        //.scale({ domain: [0, 1000] })
+        .stack(true)
         .title('Number'),
-      vl__default["default"].y().fieldO('Number')
-        .aggregate('count') // ordinal axis, place lower values at the bottom
-        .type('quantitative')
-        .title('Number'),
-      vl__default["default"].color().fieldN('Receiving Country')
-        .scale({domain: ['DK', 'DE', 'FR', 'SW', 'NO']},{ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
-        .title('Receiving')
+       vl__default["default"].color().field('Receiving Country Code')
+        .scale({ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
+        .title('Receiving') 
     );
 
   vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {

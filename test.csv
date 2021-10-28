@@ -1,12 +1,12 @@
-Sending Country Code,Receiving Country Code,Number
-DE,DE,0
-DE,FR,40
-FR,NO,78
-NO,SW,45
-SW,DK,20
-DE,DK,90
-SW,DK,40
-DE,DK,100
-DE,NO,300
-SW,DE,20
-DK,DE,200
+Sending Country Code,Receiving Country Code,Number,Year
+DE,DE,1000,2014
+DE,FR,40,2014
+FR,NO,78,2014
+NO,SW,45,2014
+SW,DK,20,2014
+DE,DK,90,2014
+SW,DK,40,2014
+DE,DK,100,2014
+DE,NO,300,2014
+SW,DE,20,2014
+DK,DE,200,2014

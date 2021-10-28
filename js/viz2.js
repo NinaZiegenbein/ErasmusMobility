@@ -1,15 +1,22 @@
 import vl from 'vega-lite-api';
 export const viz2 = vl
 .markBar({ tooltip: true })
+//try for time slider
+/*   .params(
+    // interactive parameter for the current year, bind to an internal slider
+    vl.param('Year').value(2014).bind(vl.slider(2014, 2016, 1))
+  ) 
+.transform(
+    vl.filter('datum.year === Year')
+)  */
   .encode(
     vl.y().fieldN('Sending Country Code')
-    .scale({domain: ['DK', 'DE', 'FR', 'SW', 'NO']})
+      .title('Sending Country Code'),
+    vl.x().fieldQ('Number')
+      //.scale({ domain: [0, 1000] })
+      .stack(true)
       .title('Number'),
-    vl.y().fieldO('Number')
-      .aggregate('count') // ordinal axis, place lower values at the bottom
-      .type('quantitative')
-      .title('Number'),
-    vl.color().fieldN('Receiving Country')
-      .scale({domain: ['DK', 'DE', 'FR', 'SW', 'NO']},{ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
-      .title('Receiving')
+     vl.color().field('Receiving Country Code')
+      .scale({ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
+      .title('Receiving') 
   );
