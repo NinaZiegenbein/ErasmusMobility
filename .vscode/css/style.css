@@ -1,0 +1,10 @@
+body{
+    margin: 0;
+    /* overflow: hidden; */
+    background-color:white;
+}
+.layout{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-column-gap: 2.5%;
+}
