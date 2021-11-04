@@ -7,7 +7,7 @@ export const getData = async () => {
   const data = await csv(csvUrl);
   
   // Have a look at the attributes available in the console!
-  console.log(data[0]);
+  console.log(data[10]);
 
   return data;
 };

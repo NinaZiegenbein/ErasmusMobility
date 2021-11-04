@@ -23,8 +23,8 @@ const run = async () => {
 
     const marks2 = viz2
     .data(await getData())
-    .width(window.innerWidth/2)
-    .height(window.innerHeight/2)
+    .width(400)
+    .height(300)
     .autosize({ type: 'fit', contains: 'padding' })
     .config(config);
   
