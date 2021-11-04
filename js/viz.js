@@ -4,7 +4,8 @@ export const viz = vl
 .markRect({ tooltip: true })
     .params(
       // interactive parameter for the current year, bind to an internal slider
-      vl.param('Year').value(2014).bind(vl.slider(2014, 2016,1))
+      vl.param('Year').value(2014).bind(vl.slider(2014, 2016,1)),
+      vl.selectPoint()
     ) 
       .transform(
        vl.filter('datum.Year == Year') //here error does not recognize year

@@ -6,11 +6,11 @@ export const viz2 = vl.markBar({ tooltip: true })
 //try for time slider 
    .params(
     // interactive parameter for the current year, bind to an internal slider
-    vl.param('Academic Year').value(2014).name('Academic Year').bind(vl.slider(2014, 2016, 1)), //slider does not show -> Why???
+    vl.param('Year').value(2014).name('Year').bind(vl.slider(2014, 2016, 1)), //slider does not show -> Why???
   )   
-  //    .transform(
-  //    vl.filter('datum.Year == Year') //here error does not recognize year
-  //  )  
+      .transform(
+      vl.filter('datum.Year == Year') //here error does not recognize year
+    )  
   .encode(
     vl.y().fieldN('Sending Country Code')
       .title('Sending Country Code'),

@@ -44,7 +44,8 @@
   .markRect({ tooltip: true })
       .params(
         // interactive parameter for the current year, bind to an internal slider
-        vl__default["default"].param('Year').value(2014).bind(vl__default["default"].slider(2014, 2016,1))
+        vl__default["default"].param('Year').value(2014).bind(vl__default["default"].slider(2014, 2016,1)),
+        vl__default["default"].selectPoint()
       ) 
         .transform(
          vl__default["default"].filter('datum.Year == Year') //here error does not recognize year
@@ -62,11 +63,11 @@
   //try for time slider 
      .params(
       // interactive parameter for the current year, bind to an internal slider
-      vl__default["default"].param('Academic Year').value(2014).name('Academic Year').bind(vl__default["default"].slider(2014, 2016, 1)), //slider does not show -> Why???
+      vl__default["default"].param('Year').value(2014).name('Year').bind(vl__default["default"].slider(2014, 2016, 1)), //slider does not show -> Why???
     )   
-    //    .transform(
-    //    vl.filter('datum.Year == Year') //here error does not recognize year
-    //  )  
+        .transform(
+        vl__default["default"].filter('datum.Year == Year') //here error does not recognize year
+      )  
     .encode(
       vl__default["default"].y().fieldN('Sending Country Code')
         .title('Sending Country Code'),
@@ -95,8 +96,8 @@
 
       const marks2 = viz2
       .data(await getData())
-      .width(400)
-      .height(300)
+      .width(window.innerWidth/2)
+      .height(window.innerHeight/2)
       .autosize({ type: 'fit', contains: 'padding' })
       .config(config);
     
