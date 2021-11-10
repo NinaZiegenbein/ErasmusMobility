@@ -29,6 +29,7 @@
 
   //const csvUrl = 'https://gist.githubusercontent.com/curran/8c131a74b85d0bb0246233de2cff3f52/raw/194c2fc143790b937c42bf086a5a44cb3c55340e/auto-mpg.csv';
   const csvUrl = '/test.csv';
+  //const csvUrl = '/erasmus_student_2014.csv';
 
   const getData = async () => {
     const data = await d3.csv(csvUrl);
@@ -42,49 +43,52 @@
   //import vl from 'vega-lite-api';
   const selection =  vl__default["default"].selectPoint().on("click");
 
-  const viz = vl__default["default"]
+  const matrixchart = vl__default["default"]
   .markRect({ tooltip: true })
       .params(
         // interactive parameter for the current year, bind to an internal slider
         vl__default["default"].param('Year').value(2014).bind(vl__default["default"].slider(2014, 2016,1)),
         selection
+        //add other filters same as year but as a menu
       ) 
       .transform(
-         vl__default["default"].filter('datum.Year == Year') //here error does not recognize year
+         vl__default["default"].filter('datum.Year == Year'), //here error does not recognize year
        ) 
       .encode(
-        vl__default["default"].x().fieldO('Sending Country Code').sort(vl__default["default"].field('Sending Country')).title(null).axis({ orient: 'top' }),
-        vl__default["default"].y().fieldO('Receiving Country Code').sort(vl__default["default"].field('Receiving Country')).title(null),
+        vl__default["default"].x().fieldO('Sending_Country_Code').sort(vl__default["default"].field('Sending Country')).title(null).axis({ orient: 'top' }),
+        vl__default["default"].y().fieldO('Receiving_Country_Code').sort(vl__default["default"].field('Receiving Country')).title(null),
         vl__default["default"].color().fieldQ('Number').title('Number'),    // diverging color scale 'blueorange',
-        vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3),
+        vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3),  //change opacity when hovered 
+        vl__default["default"].stroke().if(selection, vl__default["default"].value('black')).value('none')   
+  );
 
-        vl__default["default"].stroke().value('none').if(selection, vl__default["default"].value('black')).value('none') //change opacity when hovered //error: does not recognize selection as input -> WHY?
-        
-  )
-   ;
+
+   const viz = matrixchart;
 
   //import { descending } from 'd3-array';
 
   const viz2 = vl__default["default"].markBar({ tooltip: true })
   //try for time slider 
-     .params(
+     //.params(
       // interactive parameter for the current year, bind to an internal slider
-      vl__default["default"].param('Year').value(2014).name('Year').bind(vl__default["default"].slider(2014, 2016, 1)), //slider does not show -> Why???
-    )   
+      //vl.param('Year').value(2014).name('Year').bind(vl.slider(2014, 2016, 1)), //slider does not show -> Why???
+    //)   
         .transform(
-        vl__default["default"].filter('datum.Year == Year') //here error does not recognize year
+        //vl.filter('datum.Year == Year'), //here error does not recognize year
+        vl__default["default"].filter('datum.Sending_Country_Code == "DE"'),
+        vl__default["default"].filter('datum.Receiving_Country_Code == "DK"')
       )  
     .encode(
-      vl__default["default"].y().fieldN('Sending Country Code')
-        .title('Sending Country Code'),
+      vl__default["default"].y().fieldN('Year')
+        .title('Year'),
       vl__default["default"].x().fieldQ('Number')
         //.scale({ domain: [0, 1000] })
         .sort('ascending')
         .stack(true)
         .title('Number'),
-       vl__default["default"].color().fieldN('Receiving Country Code')
+       /*vl.color().fieldN('Receiving Country Code')
         .scale({ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
-        .title('Receiving') 
+        .title('Receiving') */
     );
 
   vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {

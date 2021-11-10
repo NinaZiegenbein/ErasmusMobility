@@ -1,4 +1,4 @@
-Sending Country Code,Receiving Country Code,Number,Year,Gender
+Sending_Country_Code,Receiving_Country_Code,Number,Year,Gender
 DE,DE,0,2014,Male
 DE,FR,40,2014,Male
 FR,NO,78,2014,Male
