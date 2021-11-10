@@ -40,21 +40,27 @@
   };
 
   //import vl from 'vega-lite-api';
+  const selection =  vl__default["default"].selectPoint().on("click");
+
   const viz = vl__default["default"]
   .markRect({ tooltip: true })
       .params(
         // interactive parameter for the current year, bind to an internal slider
         vl__default["default"].param('Year').value(2014).bind(vl__default["default"].slider(2014, 2016,1)),
-        vl__default["default"].selectPoint()
+        selection
       ) 
-        .transform(
+      .transform(
          vl__default["default"].filter('datum.Year == Year') //here error does not recognize year
        ) 
       .encode(
         vl__default["default"].x().fieldO('Sending Country Code').sort(vl__default["default"].field('Sending Country')).title(null).axis({ orient: 'top' }),
         vl__default["default"].y().fieldO('Receiving Country Code').sort(vl__default["default"].field('Receiving Country')).title(null),
-        vl__default["default"].color().fieldQ('Number').title('Number'))// diverging color scale 'blueorange'
+        vl__default["default"].color().fieldQ('Number').title('Number'),    // diverging color scale 'blueorange',
+        vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3),
 
+        vl__default["default"].stroke().value('none').if(selection, vl__default["default"].value('black')).value('none') //change opacity when hovered //error: does not recognize selection as input -> WHY?
+        
+  )
    ;
 
   //import { descending } from 'd3-array';
