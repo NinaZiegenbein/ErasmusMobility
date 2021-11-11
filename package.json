@@ -4,9 +4,18 @@
   "description": "Visualizing Erasmus mobility as part of our Datavisualization Course at Aarhus university.",
   "main": "database_connection.js",
   "dependencies": {
-    "mysql": "8.0.26"
+    "babel-install": "^2.1.0",
+    "d3": "^7.1.1",
+    "scrubber": "0.0.0",
+    "vega": "^5.21.0",
+    "vega-lite": "^5.1.1",
+    "vega-lite-api": "^5.0.0",
+    "vega-tooltip": "^0.27.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-node-resolve": "^13.0.6"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,0 +1,13 @@
+body{
+    margin: 0;
+    /* overflow: hidden; */
+    background-color:#ffffff;
+    font-family: 'Helvetica', sans-serif;
+    font-size: 15px;
+    line-height: 30px;
+}
+.layout{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-column-gap: 2.5%;
+}
