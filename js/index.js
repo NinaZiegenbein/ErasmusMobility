@@ -27,9 +27,10 @@ const run = async () => {
     .height(window.innerHeight/2)
     .autosize({ type: 'fit', contains: 'padding' })
     .config(config);
+
+    //const viz3 = vl.hconcat(marks, marks2);
   
   document.getElementById('matrix-viz').appendChild(await marks.render());
-  document.getElementById('stacked-bar').appendChild(await marks2.render());
-  
+  document.getElementById('stacked-bar').appendChild(await marks2.render()); 
 };
 run();
