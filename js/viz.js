@@ -5,7 +5,7 @@ const selection = vl
   .selectPoint()
   .on("click")
   .name("selection")
-  .fields("Sending_Country_Code", "Receiving_Country_Code");
+  .fields("SendCountry", "RecCountry");
 
 const matrixchart = vl
   .markRect({ tooltip: true })
@@ -14,16 +14,16 @@ const matrixchart = vl
   .encode(
     vl
       .x()
-      .fieldO("Sending_Country_Code")
-      .sort(vl.field("Sending_Country_Code"))
+      .fieldO("SendCountry")
+      .sort(vl.field("SendCountry"))
       .title("Sending Country")
       .axis({ orient: "top" }),
     vl
       .y()
-      .fieldO("Receiving_Country_Code")
-      .sort(vl.field("Receiving_Country_Code"))
+      .fieldO("RecCountry")
+      .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
-    vl.color().fieldQ("Number").title("Number"), // diverging color scale 'blueorange',
+    //vl.color().fieldQ("Number").title("Number"), // diverging color scale 'blueorange',
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );

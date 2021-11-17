@@ -27,7 +27,7 @@
     }
   };
 
-  const csvUrl = "/test.csv";
+  const csvUrl = "/realDataTest.csv";
 
   const getData = async () => {
     const data = await d3.csv(csvUrl);
