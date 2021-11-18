@@ -19,6 +19,7 @@ def exp_val(matrix):
                 exp_mat[x][y] = exp_mat[x][y]/edges
             y += 1
         x += 1
+        print(exp_mat)
     print(exp_mat)
     return exp_mat;
         
