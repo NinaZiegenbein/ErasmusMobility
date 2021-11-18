@@ -27,10 +27,12 @@
     }
   };
 
-  const csvUrl = "/realDataTest.csv";
+  const csvUrl = "/erasmus14-19.csv";
 
   const getData = async () => {
     const data = await d3.csv(csvUrl);
+
+    console.log(data[0]);
     return data;
   };
 
@@ -40,7 +42,7 @@
     .selectPoint()
     .on("click")
     .name("selection")
-    .fields("Sending_Country_Code", "Receiving_Country_Code");
+    .fields("SendCountry", "RecCountry");
 
   const matrixchart = vl__default["default"]
     .markRect({ tooltip: true })
@@ -49,16 +51,16 @@
     .encode(
       vl__default["default"]
         .x()
-        .fieldO("Sending_Country_Code")
-        .sort(vl__default["default"].field("Sending_Country_Code"))
+        .fieldO("SendCountry")
+        .sort(vl__default["default"].field("SendCountry"))
         .title("Sending Country")
         .axis({ orient: "top" }),
       vl__default["default"]
         .y()
-        .fieldO("Receiving_Country_Code")
-        .sort(vl__default["default"].field("Receiving_Country_Code"))
+        .fieldO("RecCountry")
+        .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
-      vl__default["default"].color().fieldQ("Number").title("Number"), // diverging color scale 'blueorange',
+      //vl.color().fieldQ("Number").title("Number"), // diverging color scale 'blueorange',
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
@@ -76,7 +78,7 @@
     .hconcat(matrixchart, viz2)
     .params(
       selection,
-      vl__default["default"].param("Year").value(2014).bind(vl__default["default"].slider(2014, 2016, 1))
+      vl__default["default"].param("Year").value('2014-2015').bind(vl__default["default"].slider('2014-2015', '2019-2020', 1))
     );
 
   vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {

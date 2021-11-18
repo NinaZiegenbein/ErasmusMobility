@@ -41,5 +41,5 @@ export const viz = vl
   .hconcat(matrixchart, viz2)
   .params(
     selection,
-    vl.param("Year").value(2014).bind(vl.slider(2014, 2016, 1))
+    vl.param("Year").value('2014-2015').bind(vl.slider('2014-2015', '2019-2020', 1))
   );
