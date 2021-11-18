@@ -47,10 +47,12 @@
   const matrixchart = vl__default["default"]
     .markRect({ tooltip: true })
     .select(selection)
-    .transform(vl__default["default"].filter("datum.Year == Year"),
+    .transform(
+      vl__default["default"].filter("datum.Year == Year"),
+      //vl.groupby('Participant',"SendCountry","RecCountry")
+    //vl.groupby(['SendCountry', 'RecCountry']).aggregate("Participant")
     //vl.filter("datum.Gender == Gender")
     )
-    //vl.calculate(vl.count()).as('Number')) TODO filter by relation 
     .encode(
       vl__default["default"]
         .x()
@@ -63,7 +65,7 @@
         .fieldO("RecCountry")
         .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
-      //vl.color().fieldQ("Number").title("Number"), // diverging color scale 'blueorange',
+      vl__default["default"].color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
@@ -74,11 +76,13 @@
     .transform(vl__default["default"].filter(selection))
     .encode(
       vl__default["default"].y().fieldN("Year").title("Year"),
-      vl__default["default"].x().fieldQ("Number").sort("ascending").stack(true).title("Number")
+      vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
     );
 
   const viz = vl__default["default"]
     .hconcat(matrixchart, viz2)
+    //.width(window.innerWidth/2)
+    //.height(window.innerWidth/2)
     .params(
       selection,
       vl__default["default"].param("Year").value(2014).bind(vl__default["default"].slider(2014, 2019, 1)),

@@ -10,10 +10,12 @@ const selection = vl
 const matrixchart = vl
   .markRect({ tooltip: true })
   .select(selection)
-  .transform(vl.filter("datum.Year == Year"),
+  .transform(
+    vl.filter("datum.Year == Year"),
+    //vl.groupby('Participant',"SendCountry","RecCountry")
+  //vl.groupby(['SendCountry', 'RecCountry']).aggregate("Participant")
   //vl.filter("datum.Gender == Gender")
   )
-  //vl.calculate(vl.count()).as('Number')) TODO filter by relation 
   .encode(
     vl
       .x()
@@ -26,7 +28,7 @@ const matrixchart = vl
       .fieldO("RecCountry")
       .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
-    //vl.color().fieldQ("Number").title("Number"), // diverging color scale 'blueorange',
+    vl.color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );
@@ -37,11 +39,13 @@ const viz2 = vl
   .transform(vl.filter(selection))
   .encode(
     vl.y().fieldN("Year").title("Year"),
-    vl.x().fieldQ("Number").sort("ascending").stack(true).title("Number")
+    vl.x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
   );
 
 export const viz = vl
   .hconcat(matrixchart, viz2)
+  //.width(window.innerWidth/2)
+  //.height(window.innerWidth/2)
   .params(
     selection,
     vl.param("Year").value(2014).bind(vl.slider(2014, 2019, 1)),
