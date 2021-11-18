@@ -5,7 +5,7 @@ import { Handler } from "vega-tooltip";
 import { config } from "./config";
 import { getData } from "./getData";
 import { viz } from "./viz";
-
+//register vega and vegalite and tooltip 
 vl.register(vega, vegaLite, {
   view: { renderer: "svg" },
   init: (view) => {
@@ -13,6 +13,7 @@ vl.register(vega, vegaLite, {
   },
 });
 
+//get data and rendering
 const run = async () => {
   const marks = viz
     .data(await getData())

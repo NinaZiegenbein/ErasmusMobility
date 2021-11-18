@@ -36,8 +36,6 @@
     return data;
   };
 
-  //import vl from 'vega-lite-api';
-
   const selection = vl__default["default"]
     .selectPoint()
     .on("click")
