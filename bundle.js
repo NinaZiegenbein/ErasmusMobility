@@ -47,7 +47,10 @@
   const matrixchart = vl__default["default"]
     .markRect({ tooltip: true })
     .select(selection)
-    .transform(vl__default["default"].filter("datum.Year == Year"))
+    .transform(vl__default["default"].filter("datum.Year == Year"),
+    //vl.filter("datum.Gender == Gender")
+    )
+    //vl.calculate(vl.count()).as('Number')) TODO filter by relation 
     .encode(
       vl__default["default"]
         .x()
@@ -78,7 +81,8 @@
     .hconcat(matrixchart, viz2)
     .params(
       selection,
-      vl__default["default"].param("Year").value('2014-2015').bind(vl__default["default"].slider('2014-2015', '2019-2020', 1))
+      vl__default["default"].param("Year").value(2014).bind(vl__default["default"].slider(2014, 2019, 1)),
+      //vl.param("Gender").bind(vl.menu(['Female','Male','Undefined']))
     );
 
   vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {

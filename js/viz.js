@@ -10,7 +10,10 @@ const selection = vl
 const matrixchart = vl
   .markRect({ tooltip: true })
   .select(selection)
-  .transform(vl.filter("datum.Year == Year"))
+  .transform(vl.filter("datum.Year == Year"),
+  //vl.filter("datum.Gender == Gender")
+  )
+  //vl.calculate(vl.count()).as('Number')) TODO filter by relation 
   .encode(
     vl
       .x()
@@ -41,5 +44,6 @@ export const viz = vl
   .hconcat(matrixchart, viz2)
   .params(
     selection,
-    vl.param("Year").value('2014-2015').bind(vl.slider('2014-2015', '2019-2020', 1))
+    vl.param("Year").value(2014).bind(vl.slider(2014, 2019, 1)),
+    //vl.param("Gender").bind(vl.menu(['Female','Male','Undefined']))
   );
