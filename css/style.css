@@ -1,9 +1,13 @@
 body{
     margin: 0;
     /* overflow: hidden; */
-    background-color:#ffffff;
+    background-color:white;
     font-family: 'Helvetica', sans-serif;
     font-size: 15px;
     line-height: 30px;
 }
 
+.vega-bindings:hover{
+    cursor: pointer;
+    fill: grey;
+}
