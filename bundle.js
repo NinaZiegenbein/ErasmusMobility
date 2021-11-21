@@ -51,6 +51,8 @@
     //vl.groupby(['SendCountry', 'RecCountry']).aggregate("Participant")
     //vl.filter("datum.Gender == Gender")
     )
+
+    // Here is the code for the pop up box with info when you hover over an matrix element
     .encode(
       vl__default["default"]
         .x()
@@ -63,7 +65,14 @@
         .fieldO("RecCountry")
         .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
+       
+
       vl__default["default"].color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
+      //vl__default["default"].color().variance.field("count").fieldQ("Participants"),
+
+// Here is the place to set in the expectation value
+      
+
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
@@ -76,6 +85,8 @@
       vl__default["default"].y().fieldN("Year").title("Year"),
       vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
     );
+
+    
 
   const viz = vl__default["default"]
     .hconcat(matrixchart, viz2)
