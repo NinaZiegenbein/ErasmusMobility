@@ -37,7 +37,10 @@ const matrixchart = vl
 const barchart = vl
   .markBar({ tooltip: true })
   .select(selection)
-  .transform(vl.filter(selection)) //transforms according to selection on the left
+  .transform(vl.filter(selection),
+    vl.filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+    vl.filter('datum.Duration <= Duration'),
+    vl.filter('datum.Age <= Age')) //transforms according to selection on the left
   //encoding of y axis as Year and x axis as number of participants
   .encode(
     vl.y().fieldN("Year").title("Year"),

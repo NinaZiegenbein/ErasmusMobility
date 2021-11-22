@@ -75,7 +75,10 @@
   const barchart = vl__default["default"]
     .markBar({ tooltip: true })
     .select(selection)
-    .transform(vl__default["default"].filter(selection)) //transforms according to selection on the left
+    .transform(vl__default["default"].filter(selection),
+      vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+      vl__default["default"].filter('datum.Duration <= Duration'),
+      vl__default["default"].filter('datum.Age <= Age')) //transforms according to selection on the left
     //encoding of y axis as Year and x axis as number of participants
     .encode(
       vl__default["default"].y().fieldN("Year").title("Year"),
