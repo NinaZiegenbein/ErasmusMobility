@@ -44,13 +44,14 @@
     .name("selection")
     .fields("SendCountry", "RecCountry");
 
-    //start of matrixchart
+  //start of matrixchart
   const matrixchart = vl__default["default"]
     .markRect({ tooltip: true })
     .select(selection) //changes selection in other chart
     .transform(
-      vl__default["default"].filter("datum.Year == Year"),//filter for year according to slider
-      vl__default["default"].filter("test(regexp(Gender), datum.Gender)")
+      vl__default["default"].filter("datum.Year == Year"), //filter for year according to slider
+      vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+      vl__default["default"].filter('datum.Duration <= Duration')
     )
     //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
     .encode(
@@ -77,15 +78,29 @@
     //encoding of y axis as Year and x axis as number of participants
     .encode(
       vl__default["default"].y().fieldN("Year").title("Year"),
-      vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
+      vl__default["default"]
+        .x()
+        .aggregate("count")
+        .fieldQ("Participants")
+        .sort("ascending")
+        .stack(true)
+        .title("Participants")
     );
 
   const viz = vl__default["default"]
-    .hconcat(matrixchart, barchart)//concatenation of visualizations
-    .params(    // definition of parameters valid for both visualizations
+    .hconcat(matrixchart, barchart) //concatenation of visualizations
+    .params(
+      // definition of parameters valid for both visualizations
       selection,
       vl__default["default"].param("Year").value(2014).bind(vl__default["default"].slider(2014, 2019, 1)),
-      vl__default["default"].param("Gender").bind(vl__default["default"].radio('.*' ,'Female','Male','Undefined').labels('All','Female','Male','Undefined'))
+      vl__default["default"]
+        .param("Gender")
+        .bind(
+          vl__default["default"]
+            .radio(".*", "Female", "Male", "Undefined")
+            .labels("All", "Female", "Male", "Undefined")
+        ),
+        vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10))
     );
 
   //register vega and vegalite and tooltip 
