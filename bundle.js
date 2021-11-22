@@ -42,7 +42,8 @@
     .selectPoint()
     .on("click")
     .name("selection")
-    .fields("SendCountry", "RecCountry");
+    .fields("SendCountry", "RecCountry")
+    .toggle(true);
 
   //start of matrixchart
   const matrixchart = vl__default["default"]
@@ -75,7 +76,10 @@
   const barchart = vl__default["default"]
     .markBar({ tooltip: true })
     .select(selection)
-    .transform(vl__default["default"].filter(selection)) //transforms according to selection on the left
+    .transform(vl__default["default"].filter(selection), 
+      vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+      vl__default["default"].filter('datum.Duration <= Duration'),
+      vl__default["default"].filter('datum.Age <= Age')) //transforms according to selection on the left
     //encoding of y axis as Year and x axis as number of participants
     .encode(
       vl__default["default"].y().fieldN("Year").title("Year"),
@@ -88,8 +92,23 @@
         .title("Participants")
     );
 
+    const stackedbar = vl__default["default"]
+    .markBar({ tooltip: true })
+    .select(selection)
+    .transform(vl__default["default"].filter(selection))
+    .encode(
+        vl__default["default"].x().fieldQ('Participants')
+        .aggregate("count")
+          //.scale({ domain: [0, 1000] })
+          .sort('ascending')
+          .stack(true)
+          .title('Participants'),
+         vl__default["default"].color().fieldN('RecCountry')
+          .scale({ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
+      ); 
+
   const viz = vl__default["default"]
-    .hconcat(matrixchart, barchart) //concatenation of visualizations
+    .hconcat(matrixchart, barchart, stackedbar) //concatenation of visualizations
     .params(
       // definition of parameters valid for both visualizations
       selection,
