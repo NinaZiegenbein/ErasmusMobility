@@ -51,8 +51,9 @@
     .transform(
       vl__default["default"].filter("datum.Year == Year"), //filter for year according to slider
       vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
-      vl__default["default"].filter('datum.Duration <= Duration')
-    )
+      vl__default["default"].filter('datum.Duration <= Duration'),
+      vl__default["default"].filter('datum.Age <= Age'))
+    
     //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
     .encode(
       vl__default["default"]
@@ -100,7 +101,8 @@
             .radio(".*", "Female", "Male", "Undefined")
             .labels("All", "Female", "Male", "Undefined")
         ),
-        vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10))
+        vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10)),
+        vl__default["default"].param('Age').value(40).bind(vl__default["default"].slider(0, 40, 1))
     );
 
   //register vega and vegalite and tooltip 

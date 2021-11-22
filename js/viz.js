@@ -13,8 +13,9 @@ const matrixchart = vl
   .transform(
     vl.filter("datum.Year == Year"), //filter for year according to slider
     vl.filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
-    vl.filter('datum.Duration <= Duration')
-  )
+    vl.filter('datum.Duration <= Duration'),
+    vl.filter('datum.Age <= Age'))
+  
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
   .encode(
     vl
@@ -62,5 +63,6 @@ export const viz = vl
           .radio(".*", "Female", "Male", "Undefined")
           .labels("All", "Female", "Male", "Undefined")
       ),
-      vl.param('Duration').value(400).bind(vl.slider(0,400,10))
+      vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
+      vl.param('Age').value(40).bind(vl.slider(0, 40, 1))
   );
