@@ -29,6 +29,7 @@
 
   const csvUrl = "/erasmus14-19.csv";
 
+  // get the data from local file storage with d3
   const getData = async () => {
     const data = await d3.csv(csvUrl);
 
@@ -36,21 +37,22 @@
     return data;
   };
 
+  //selection variable for when item is clicked
   const selection = vl__default["default"]
     .selectPoint()
     .on("click")
     .name("selection")
     .fields("SendCountry", "RecCountry");
 
+    //start of matrixchart
   const matrixchart = vl__default["default"]
     .markRect({ tooltip: true })
-    .select(selection)
+    .select(selection) //changes selection in other chart
     .transform(
-      vl__default["default"].filter("datum.Year == Year"),
-      //vl.groupby('Participant',"SendCountry","RecCountry")
-    //vl.groupby(['SendCountry', 'RecCountry']).aggregate("Participant")
-    //vl.filter("datum.Gender == Gender")
+      vl__default["default"].filter("datum.Year == Year"),//filter for year according to slider
+      vl__default["default"].filter("test(regexp(Gender), datum.Gender)")
     )
+    //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
     .encode(
       vl__default["default"]
         .x()
@@ -63,30 +65,30 @@
         .fieldO("RecCountry")
         .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
-      vl__default["default"].color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
+      vl__default["default"].color().aggregate("count").fieldQ("Participants").title("Participants"), // diverging color scale 'blueorange',
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
-
-  const viz2 = vl__default["default"]
+  // bar chart for overview of number of participants over time
+  const barchart = vl__default["default"]
     .markBar({ tooltip: true })
     .select(selection)
-    .transform(vl__default["default"].filter(selection))
+    .transform(vl__default["default"].filter(selection)) //transforms according to selection on the left
+    //encoding of y axis as Year and x axis as number of participants
     .encode(
       vl__default["default"].y().fieldN("Year").title("Year"),
       vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
     );
 
   const viz = vl__default["default"]
-    .hconcat(matrixchart, viz2)
-    //.width(window.innerWidth/2)
-    //.height(window.innerWidth/2)
-    .params(
+    .hconcat(matrixchart, barchart)//concatenation of visualizations
+    .params(    // definition of parameters valid for both visualizations
       selection,
       vl__default["default"].param("Year").value(2014).bind(vl__default["default"].slider(2014, 2019, 1)),
-      //vl.param("Gender").bind(vl.menu(['Female','Male','Undefined']))
+      vl__default["default"].param("Gender").bind(vl__default["default"].radio('.*' ,'Female','Male','Undefined').labels('All','Female','Male','Undefined'))
     );
 
+  //register vega and vegalite and tooltip 
   vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {
     view: { renderer: "svg" },
     init: (view) => {
@@ -94,6 +96,7 @@
     },
   });
 
+  //get data and rendering
   const run = async () => {
     const marks = viz
       .data(await getData())

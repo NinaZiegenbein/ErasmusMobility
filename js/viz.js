@@ -6,12 +6,13 @@ const selection = vl
   .name("selection")
   .fields("SendCountry", "RecCountry");
 
-  //start of matrixchart
+//start of matrixchart
 const matrixchart = vl
   .markRect({ tooltip: true })
   .select(selection) //changes selection in other chart
   .transform(
     vl.filter("datum.Year == Year"), //filter for year according to slider
+    vl.filter("test(regexp(Gender), datum.Gender)")
   )
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
   .encode(
@@ -26,7 +27,7 @@ const matrixchart = vl
       .fieldO("RecCountry")
       .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
-    vl.color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
+    vl.color().aggregate("count").fieldQ("Participants").title("Participants"), // diverging color scale 'blueorange',
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );
@@ -38,13 +39,26 @@ const barchart = vl
   //encoding of y axis as Year and x axis as number of participants
   .encode(
     vl.y().fieldN("Year").title("Year"),
-    vl.x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
+    vl
+      .x()
+      .aggregate("count")
+      .fieldQ("Participants")
+      .sort("ascending")
+      .stack(true)
+      .title("Participants")
   );
 
 export const viz = vl
-  .hconcat(matrixchart, barchart)//concatenation of visualizations
-  .params(    // definition of parameters valid for both visualizations
+  .hconcat(matrixchart, barchart) //concatenation of visualizations
+  .params(
+    // definition of parameters valid for both visualizations
     selection,
     vl.param("Year").value(2014).bind(vl.slider(2014, 2019, 1)),
-    //vl.param("Gender").bind(vl.menu(['Female','Male','Undefined']))
+    vl
+      .param("Gender")
+      .bind(
+        vl
+          .radio(".*", "Female", "Male", "Undefined")
+          .labels("All", "Female", "Male", "Undefined")
+      )
   );
