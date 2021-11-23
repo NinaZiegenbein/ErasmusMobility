@@ -11,8 +11,33 @@ const matrixchart = vl
   .markRect({ tooltip: true })
   .select(selection) //changes selection in other chart
   .transform(
-    vl.filter("datum.Year == Year"), //filter for year according to slider
+    vl.filter("datum.Year == Year"),
+    // count for x axis
+    vl.joinaggregate([{op:"count",
+      field:"Participants",
+      as:"x_in"
+    }]).groupby(["RecCountry"]),
+    // Count for y axis
+    vl.joinaggregate([{op:"count",
+      field:"Participants",
+      as:"y_out"
+    }]).groupby(["SendCountry"]),
+    // count for all the edges
+    vl.joinaggregate([{op:"count",
+      field:"Participants",
+      as:"all_edges"
+    }]),
+
+    // Calculating (x*y)/all_edges getting the expectancy value for each country <3
+    vl.calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy")
+
+
+
+  
+     //filter for year according to slider
   )
+
+  
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
   .encode(
     vl
@@ -26,7 +51,11 @@ const matrixchart = vl
       .fieldO("RecCountry")
       .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
-    vl.color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
+      
+    
+    vl.color().fieldQ("Expectancy"),
+
+      //vl.color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );
@@ -41,49 +70,6 @@ const barchart = vl
     vl.x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
   );
 
-  // here is the code for x_in
-  const viz3 = vl__default["default"]
-  .markRect({ tooltip: true })
-  .select(selection)
-  .transform(
-    vl__default["default"].filter("datum.Year == Year"))
-  .encode(
-    vl__default["default"]
-      .y()
-      .fieldO("RecCountry")
-      .sort(vl__default["default"].field("RecCountry"))
-      .title("Receiving Country"),
-     
-      //values for rows
-      //vl__default["default"].y().fieldN("Year").title("Year"),
-      vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ReceivingCountry"),
-      //vl__default["default"].x_values
-  );
-
-  
-  // Here is the numbers for y_out
-  const viz4 = vl__default["default"]
-  .markRect({ tooltip: true })
-  .select(selection)
-  .transform(
-    vl__default["default"].filter("datum.Year == Year"))
-
-  
-  .encode(
-    vl__default["default"]
-      .x()
-      .fieldO("SendCountry")
-      .sort(vl__default["default"].field("SendingCountry"))
-      .title("Sending Country")
-      .axis({ orient: "top" }),
-    
-      
-     
-      //values for rows
-      //vl__default["default"].y().fieldN("Year").title("Year"),
-      vl__default["default"].y().aggregate("count").fieldQ("Participants").sort("ReceivingCountry")
-  );
-  
 
 export const viz = vl
   .hconcat(matrixchart, barchart)//concatenation of visualizations

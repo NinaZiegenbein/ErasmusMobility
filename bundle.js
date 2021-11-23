@@ -29,6 +29,7 @@
 
   const csvUrl = "/erasmus14-19.csv";
 
+  // get the data from local file storage with d3
   const getData = async () => {
     const data = await d3.csv(csvUrl);
 
@@ -36,121 +37,95 @@
     return data;
   };
 
-  const selection = vl
+  //selection variable for when item is clicked
+  const selection = vl__default["default"]
     .selectPoint()
     .on("click")
     .name("selection")
     .fields("SendCountry", "RecCountry");
 
-  const matrixchart = vl
+    //start of matrixchart
+  const matrixchart = vl__default["default"]
     .markRect({ tooltip: true })
-    .select(selection)
+    .select(selection) //changes selection in other chart
     .transform(
-      vl.filter("datum.Year == Year"),
-      //vl.groupby('Participant',"SendCountry","RecCountry")
-    //vl.groupby(['SendCountry', 'RecCountry']).aggregate("Participant")
-    //vl.filter("datum.Gender == Gender")
+      vl__default["default"].filter("datum.Year == Year"),
+      // count for x axis
+      vl__default["default"].joinaggregate([{op:"count",
+        field:"Participants",
+        as:"x_in"
+      }]).groupby(["RecCountry"]),
+      // Count for y axis
+      vl__default["default"].joinaggregate([{op:"count",
+        field:"Participants",
+        as:"y_out"
+      }]).groupby(["SendCountry"]),
+      // count for all the edges
+      vl__default["default"].joinaggregate([{op:"count",
+        field:"Participants",
+        as:"all_edges"
+      }]),
+
+      // Calculating (x*y)/all_edges getting the expectancy value for each country <3
+      vl__default["default"].calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy")
+
+
+
+    
+       //filter for year according to slider
     )
 
-    // Here is the code for the pop up box with info when you hover over an matrix element
+    
+    //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
     .encode(
-      vl
+      vl__default["default"]
         .x()
         .fieldO("SendCountry")
-        .sort(vl.field("SendCountry"))
+        .sort(vl__default["default"].field("SendCountry"))
         .title("Sending Country")
         .axis({ orient: "top" }),
-      vl
+      vl__default["default"]
         .y()
         .fieldO("RecCountry")
-        .sort(vl.field("RecCountry"))
+        .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
         
-       
-
-      vl.color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
-      //vl.color().aggregate("count").fieldO("sendcountry"),
       
-      //vl.y().fieldN("Year").title("Year"),
-      // Here is the place to set in the expectation value
-      vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
-      vl.stroke().if(selection, vl.value("black")),
-      
+      vl__default["default"].color().fieldQ("Expectancy"),
 
-      //print("hei")
-
+        //vl.color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
+      vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
+      vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
-// Code for total of edges 
-  const viz2 = vl
+  // bar chart for overview of number of participants over time
+  const barchart = vl__default["default"]
     .markBar({ tooltip: true })
     .select(selection)
-    .transform(vl.filter(selection))
+    .transform(vl__default["default"].filter(selection)) //transforms according to selection on the left
+    //encoding of y axis as Year and x axis as number of participants
     .encode(
-      vl.y().fieldN("Year").title("Year"),
-      vl.x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
-    );
-    
-    // here is the code for x_in
-    const viz3 = vl
-    .markRect({ tooltip: true })
-    .select(selection)
-    .transform(
-      vl.filter("datum.Year == Year"))
-    .encode(
-      vl
-        .y()
-        .fieldO("RecCountry")
-        .sort(vl.field("RecCountry"))
-        .title("Receiving Country"),
-       
-        //values for rows
-        //vl.y().fieldN("Year").title("Year"),
-        vl.x().aggregate("count").fieldQ("Participants").sort("ReceivingCountry"),
-        //vl.x_values
+      vl__default["default"].y().fieldN("Year").title("Year"),
+      vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
     );
 
-    
-    // Here is the numbers for y_out
-    const viz4 = vl
-    .markRect({ tooltip: true })
-    .select(selection)
-    .transform(
-      vl.filter("datum.Year == Year"))
 
-    
-    .encode(
-      vl
-        .x()
-        .fieldO("SendCountry")
-        .sort(vl.field("SendingCountry"))
-        .title("Sending Country")
-        .axis({ orient: "top" }),
-      
-        
-       
-        //values for rows
-        //vl.y().fieldN("Year").title("Year"),
-        vl.y().aggregate("count").fieldQ("Participants").sort("ReceivingCountry")
-    );
-    
-
-  const viz = vl
-    .hconcat(matrixchart, viz2, viz3, viz4)
-    //.width(window.innerWidth/2)
-    //.height(window.innerWidth/2)
-    .params(
+  const viz = vl__default["default"]
+    .hconcat(matrixchart, barchart)//concatenation of visualizations
+    .params(    // definition of parameters valid for both visualizations
       selection,
-      vl.param("Year").value(2014).bind(vl.slider(2014, 2019, 1)),
+      vl__default["default"].param("Year").value(2014).bind(vl__default["default"].slider(2014, 2019, 1)),
       //vl.param("Gender").bind(vl.menu(['Female','Male','Undefined']))
     );
 
-  vl.register(vega__default["default"], vegaLite__default["default"], {
+  //register vega and vegalite and tooltip 
+  vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {
     view: { renderer: "svg" },
     init: (view) => {
       view.tooltip(new vegaTooltip.Handler().call);
     },
   });
 
+  //get data and rendering
   const run = async () => {
     const marks = viz
       .data(await getData())
