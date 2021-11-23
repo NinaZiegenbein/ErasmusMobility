@@ -13,10 +13,35 @@ const matrixchart = vl
   .markRect({ tooltip: true })
   .select(selection) //changes selection in other chart
   .transform(
-    vl.filter("datum.Year == Year"), //filter for year according to slider
-    vl.filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
-    vl.filter('datum.Duration <= Duration'),
-    vl.filter('datum.Age <= Age'))
+      vl.filter("datum.Year == Year"), //filter for year according to slider
+      vl.filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+      vl.filter('datum.Duration <= Duration'),
+      vl.filter('datum.Age <= Age'))
+    // count for x axis
+    vl.joinaggregate([{op:"count",
+      field:"Participants",
+      as:"x_in"
+    }]).groupby(["RecCountry"]),
+    // Count for y axis
+    vl.joinaggregate([{op:"count",
+      field:"Participants",
+      as:"y_out"
+    }]).groupby(["SendCountry"]),
+    // count for all the edges
+    vl.joinaggregate([{op:"count",
+      field:"Participants",
+      as:"all_edges"
+    }]),
+
+    // Calculating (x*y)/all_edges getting the expectancy value for each country <3
+    vl.calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy")
+
+
+
+
+     //filter for year according to slider
+  )
+
 
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
   .encode(
@@ -32,11 +57,10 @@ const matrixchart = vl
       .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
     vl.color()
-        .aggregate("count")
-        .fieldQ("Participants")
+        .fieldQ("Expectancy")
         .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
         //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
-        .title("Participant"),
+        .title("Expectancy Value"),
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );
