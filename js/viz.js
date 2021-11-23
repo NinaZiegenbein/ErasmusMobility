@@ -41,6 +41,50 @@ const barchart = vl
     vl.x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
   );
 
+  // here is the code for x_in
+  const viz3 = vl__default["default"]
+  .markRect({ tooltip: true })
+  .select(selection)
+  .transform(
+    vl__default["default"].filter("datum.Year == Year"))
+  .encode(
+    vl__default["default"]
+      .y()
+      .fieldO("RecCountry")
+      .sort(vl__default["default"].field("RecCountry"))
+      .title("Receiving Country"),
+     
+      //values for rows
+      //vl__default["default"].y().fieldN("Year").title("Year"),
+      vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ReceivingCountry"),
+      //vl__default["default"].x_values
+  );
+
+  
+  // Here is the numbers for y_out
+  const viz4 = vl__default["default"]
+  .markRect({ tooltip: true })
+  .select(selection)
+  .transform(
+    vl__default["default"].filter("datum.Year == Year"))
+
+  
+  .encode(
+    vl__default["default"]
+      .x()
+      .fieldO("SendCountry")
+      .sort(vl__default["default"].field("SendingCountry"))
+      .title("Sending Country")
+      .axis({ orient: "top" }),
+    
+      
+     
+      //values for rows
+      //vl__default["default"].y().fieldN("Year").title("Year"),
+      vl__default["default"].y().aggregate("count").fieldQ("Participants").sort("ReceivingCountry")
+  );
+  
+
 export const viz = vl
   .hconcat(matrixchart, barchart)//concatenation of visualizations
   .params(    // definition of parameters valid for both visualizations
