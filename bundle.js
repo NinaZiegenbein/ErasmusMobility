@@ -65,18 +65,22 @@
         .fieldO("RecCountry")
         .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
+        
        
 
       vl__default["default"].color().aggregate("count").fieldQ("Participants"), // diverging color scale 'blueorange',
-      //vl__default["default"].color().variance.field("count").fieldQ("Participants"),
-
+      //vl__default["default"].color().aggregate("count").fieldO("sendcountry"),
+      
+      //vl__default["default"].y().fieldN("Year").title("Year"),
 // Here is the place to set in the expectation value
+      vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
+      vl__default["default"].stroke().if(selection, vl__default["default"].value("black")),
       
 
-      vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
-      vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
-    );
+      //print("hei")
 
+    );
+// Code for total of edges 
   const viz2 = vl__default["default"]
     .markBar({ tooltip: true })
     .select(selection)
@@ -85,11 +89,53 @@
       vl__default["default"].y().fieldN("Year").title("Year"),
       vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ascending").stack(true).title("Participants")
     );
+    
+    // here is the code for x_in
+    const viz3 = vl__default["default"]
+    .markRect({ tooltip: true })
+    .select(selection)
+    .transform(
+      vl__default["default"].filter("datum.Year == Year"))
+    .encode(
+      vl__default["default"]
+        .y()
+        .fieldO("RecCountry")
+        .sort(vl__default["default"].field("RecCountry"))
+        .title("Receiving Country"),
+        
+       
+        //values for rows
+        //vl__default["default"].y().fieldN("Year").title("Year"),
+        vl__default["default"].x().aggregate("count").fieldQ("Participants").sort("ReceivingCountry"),
+        //vl__default["default"].x_values
+    );
+    
+    // Here is the numbers for y_out
+    const viz4 = vl__default["default"]
+    .markRect({ tooltip: true })
+    .select(selection)
+    .transform(
+      vl__default["default"].filter("datum.Year == Year"))
 
+    
+    .encode(
+      vl__default["default"]
+        .x()
+        .fieldO("SendCountry")
+        .sort(vl__default["default"].field("SendingCountry"))
+        .title("Sending Country")
+        .axis({ orient: "top" }),
+      
+        
+       
+        //values for rows
+        //vl__default["default"].y().fieldN("Year").title("Year"),
+        vl__default["default"].y().aggregate("count").fieldQ("Participants").sort("ReceivingCountry")
+    );
     
 
   const viz = vl__default["default"]
-    .hconcat(matrixchart, viz2)
+    .hconcat(viz2, viz3, viz4)
     //.width(window.innerWidth/2)
     //.height(window.innerWidth/2)
     .params(
