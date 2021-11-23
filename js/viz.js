@@ -15,8 +15,9 @@ const matrixchart = vl
   .transform(
     vl.filter("datum.Year == Year"), //filter for year according to slider
     vl.filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
-    vl.filter('datum.Duration <= Duration')
-  )
+    vl.filter('datum.Duration <= Duration'),
+    vl.filter('datum.Age <= Age'))
+
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
   .encode(
     vl
@@ -43,7 +44,10 @@ const matrixchart = vl
 const barchart = vl
   .markBar({ tooltip: true })
   .select(selection)
-  .transform(vl.filter(selection)) //transforms according to selection on the left
+  .transform(vl.filter(selection),
+    vl.filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+    vl.filter('datum.Duration <= Duration'),
+    vl.filter('datum.Age <= Age')) //transforms according to selection on the left
   //encoding of y axis as Year and x axis as number of participants
   .encode(
     vl.y().fieldN("Year").title("Year"),
@@ -69,8 +73,10 @@ export const viz = vl
           .radio(".*", "Female", "Male", "Undefined")
           .labels("All", "Female", "Male", "Undefined")
       ),
-    vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
-    vl.param('Expectancy').value(false).bind(vl.menu(true, false))
+      vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
+      vl.param('Age').value(40).bind(vl.slider(0, 40, 1)),
+      vl.param('Expectancy').value(false).bind(vl.menu(true, false))
+
   );
 
 /*viewof durationRange = rangeSlider({
