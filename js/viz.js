@@ -1,4 +1,6 @@
 import vl from "@vega/vega-lite-api-v5";
+import * as d3 from "d3";
+
 //selection variable for when item is clicked
 const selection = vl
   .selectPoint()
@@ -28,7 +30,12 @@ const matrixchart = vl
       .fieldO("RecCountry")
       .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
-    vl.color().aggregate("count").fieldQ("Participants").title("Participants"), // diverging color scale 'blueorange',
+    vl.color()
+        .aggregate("count")
+        .fieldQ("Participants")
+        .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+        //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
+        .title("Participant"),
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );
@@ -62,5 +69,13 @@ export const viz = vl
           .radio(".*", "Female", "Male", "Undefined")
           .labels("All", "Female", "Male", "Undefined")
       ),
-      vl.param('Duration').value(400).bind(vl.slider(0,400,10))
+    vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
+    vl.param('Expectancy').value(false).bind(vl.menu(true, false))
   );
+
+/*viewof durationRange = rangeSlider({
+  min: d3.min(d => d.Duration),
+  max: d3.max(d => d.Duration),
+  value: this ? this.value : [0,400],
+  title: "Duration"
+})*/

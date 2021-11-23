@@ -66,7 +66,12 @@
         .fieldO("RecCountry")
         .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
-      vl__default["default"].color().aggregate("count").fieldQ("Participants").title("Participants"), // diverging color scale 'blueorange',
+      vl__default["default"].color()
+          .aggregate("count")
+          .fieldQ("Participants")
+          .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+          //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
+          .title("Participant"),
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
@@ -100,8 +105,16 @@
             .radio(".*", "Female", "Male", "Undefined")
             .labels("All", "Female", "Male", "Undefined")
         ),
-        vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10))
+      vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10)),
+      vl__default["default"].param('Expectancy').value(false).bind(vl__default["default"].menu(true, false))
     );
+
+  /*viewof durationRange = rangeSlider({
+    min: d3.min(d => d.Duration),
+    max: d3.max(d => d.Duration),
+    value: this ? this.value : [0,400],
+    title: "Duration"
+  })*/
 
   //register vega and vegalite and tooltip 
   vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {
