@@ -49,10 +49,31 @@
     .markRect({ tooltip: true })
     .select(selection) //changes selection in other chart
     .transform(
-      vl__default["default"].filter("datum.Year == Year"), //filter for year according to slider
-      vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
-      vl__default["default"].filter('datum.Duration <= Duration')
+        vl__default["default"].filter("datum.Year == Year"), //filter for year according to slider
+        vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+        vl__default["default"].filter('datum.Duration <= Duration'),
+        vl__default["default"].filter('datum.Age <= Age'),
+      // count for x axis
+      vl__default["default"].joinaggregate([{op:"count",
+        field:"Participants",
+        as:"x_in"
+      }]).groupby(["RecCountry"]),
+      // Count for y axis
+      vl__default["default"].joinaggregate([{op:"count",
+        field:"Participants",
+        as:"y_out"
+      }]).groupby(["SendCountry"]),
+      // count for all the edges
+      vl__default["default"].joinaggregate([{op:"count",
+        field:"Participants",
+        as:"all_edges"
+      }]),
+
+      // Calculating (x*y)/all_edges getting the expectancy value for each country <3
+      vl__default["default"].calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy")
     )
+
+
     //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
     .encode(
       vl__default["default"]
@@ -67,11 +88,10 @@
         .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
       vl__default["default"].color()
-          .aggregate("count")
-          .fieldQ("Participants")
+          .fieldQ("Expectancy")
           .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
           //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
-          .title("Participant"),
+          .title("Expectancy Value"),
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
@@ -79,7 +99,10 @@
   const barchart = vl__default["default"]
     .markBar({ tooltip: true })
     .select(selection)
-    .transform(vl__default["default"].filter(selection)) //transforms according to selection on the left
+    .transform(vl__default["default"].filter(selection),
+      vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
+      vl__default["default"].filter('datum.Duration <= Duration'),
+      vl__default["default"].filter('datum.Age <= Age')) //transforms according to selection on the left
     //encoding of y axis as Year and x axis as number of participants
     .encode(
       vl__default["default"].y().fieldN("Year").title("Year"),
@@ -105,8 +128,10 @@
             .radio(".*", "Female", "Male", "Undefined")
             .labels("All", "Female", "Male", "Undefined")
         ),
-      vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10)),
-      vl__default["default"].param('Expectancy').value(false).bind(vl__default["default"].menu(true, false))
+        vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10)),
+        vl__default["default"].param('Age').value(40).bind(vl__default["default"].slider(0, 40, 1)),
+        vl__default["default"].param('Expectancy').value(false).bind(vl__default["default"].menu(true, false))
+
     );
 
   /*viewof durationRange = rangeSlider({

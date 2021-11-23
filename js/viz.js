@@ -16,7 +16,7 @@ const matrixchart = vl
       vl.filter("datum.Year == Year"), //filter for year according to slider
       vl.filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
       vl.filter('datum.Duration <= Duration'),
-      vl.filter('datum.Age <= Age'))
+      vl.filter('datum.Age <= Age'),
     // count for x axis
     vl.joinaggregate([{op:"count",
       field:"Participants",
@@ -35,11 +35,6 @@ const matrixchart = vl
 
     // Calculating (x*y)/all_edges getting the expectancy value for each country <3
     vl.calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy")
-
-
-
-
-     //filter for year according to slider
   )
 
 
