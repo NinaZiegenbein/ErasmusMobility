@@ -32,12 +32,15 @@ const matrixchart = vl
       field:"Participants",
       as:"all_edges"
     }]),
-
+    
+    vl.joinaggregate([{op:"count",
+    field:"Participants",
+    as:"Number"
+    }]).groupby(["SendCountry","RecCountry"]),
     // Calculating (x*y)/all_edges getting the expectancy value for each country <3
-    vl.calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy")
+    vl.calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy"),
+    vl.calculate("(datum.Expectancy - datum.Number)").as("Deviation")
   )
-
-
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
   .encode(
     vl
@@ -52,10 +55,10 @@ const matrixchart = vl
       .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
     vl.color()
-        .fieldQ("Expectancy")
-        .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+        .fieldQ("Deviation")
+        .scale({type: "symlog", scheme: "redblue", reverse: true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
         //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
-        .title("Expectancy Value"),
+        .title("Deviation from Expected"),
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );

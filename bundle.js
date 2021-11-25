@@ -27,7 +27,7 @@
     }
   };
 
-  const csvUrl = "/erasmus14-19.csv";
+  const csvUrl = "/erasmus14-19_fake.csv";
 
   // get the data from local file storage with d3
   const getData = async () => {
@@ -68,12 +68,15 @@
         field:"Participants",
         as:"all_edges"
       }]),
-
+      
+      vl__default["default"].joinaggregate([{op:"count",
+      field:"Participants",
+      as:"Number"
+      }]).groupby(["SendCountry","RecCountry"]),
       // Calculating (x*y)/all_edges getting the expectancy value for each country <3
-      vl__default["default"].calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy")
+      vl__default["default"].calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy"),
+      vl__default["default"].calculate("(datum.Expectancy - datum.Number)").as("Deviation")
     )
-
-
     //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
     .encode(
       vl__default["default"]
@@ -88,10 +91,10 @@
         .sort(vl__default["default"].field("RecCountry"))
         .title("Receiving Country"),
       vl__default["default"].color()
-          .fieldQ("Expectancy")
-          .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+          .fieldQ("Deviation")
+          .scale({type: "symlog", scheme: "redblue", reverse: true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
           //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
-          .title("Expectancy Value"),
+          .title("Deviation from Expected"),
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
