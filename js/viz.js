@@ -79,6 +79,7 @@ const barchart = vl
       .title("Participants")
   );
 
+ // Binding the sliders
 export const viz = vl
   .hconcat(matrixchart, barchart) //concatenation of visualizations
   .params(
@@ -92,6 +93,9 @@ export const viz = vl
           .radio(".*", "Female", "Male", "Undefined")
           .labels("All", "Female", "Male", "Undefined")
       ),
+      // (param is name of slider)
+      // Value is max value of the slider
+      // bind makes the slider, with min value, max value, interval
       vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
       vl.param('Age').value(40).bind(vl.slider(0, 40, 1)),
       vl.param('Expectancy').value(false).bind(vl.menu(true, false))
