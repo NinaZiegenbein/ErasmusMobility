@@ -7,7 +7,11 @@ body{
     line-height: 30px;
 }
 
+
+
 .vega-bindings:hover{
     cursor: pointer;
     fill: grey;
+    padding-left: 500px;
+    
 }
