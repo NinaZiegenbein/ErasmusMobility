@@ -119,23 +119,8 @@
         .title("Participants")
     );
 
-    const stackedbar = vl__default["default"]
-    .markBar({ tooltip: true })
-    .select(selection)
-    .transform(vl__default["default"].filter(selection))
-    .encode(
-        vl__default["default"].x().fieldQ('Participants')
-        .aggregate("count")
-          //.scale({ domain: [0, 1000] })
-          .sort('ascending')
-          .stack(true)
-          .title('Participants'),
-         vl__default["default"].color().fieldN('RecCountry')
-          .scale({ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
-      ); 
-
   const viz = vl__default["default"]
-    .hconcat(matrixchart, barchart, stackedbar) //concatenation of visualizations
+    .hconcat(matrixchart, barchart) //concatenation of visualizations
     .params(
       // definition of parameters valid for both visualizations
       selection,
@@ -160,6 +145,35 @@
     title: "Duration"
   })*/
 
+  //selection variable for when item is clicked
+  /* const selection = vl
+    .selectPoint()
+    .on("click")
+    .name("selection")
+    .fields("SendCountry", "RecCountry")
+    .toggle(true);
+
+   */
+    const stackedbar = vl__default["default"]
+    .markBar({ tooltip: true })
+    .params(vl__default["default"].param("RecCountry").bind(vl__default["default"].menu('.*', 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'IS', 'UK', 'AL', 'BY', 'EL', 'ES', 'FR', 'HR', 'IT', 'CY', 'LV', 'NO', 'MK', 'BA', 'MD', 'LT', 'LU', 'HU', 'MT', 'NL','PL', 'AT', 'PL', 'LI', 'RS', 'XK', 'UA', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'CH', 'TR', 'ME', 'RU')
+    .labels('All', 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'IS', 'UK', 'AL', 'BY', 'EL', 'ES', 'FR', 'HR', 'IT', 'CY', 'LV', 'NO', 'MK', 'BA', 'MD', 'LT', 'LU', 'HU', 'MT', 'NL','PL', 'AT', 'PL', 'LI', 'RS', 'XK', 'UA', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'CH', 'TR', 'ME', 'RU')))
+    .transform(
+    vl__default["default"].filter("datum.RecCountry == RecCountry"))
+    .encode(
+      vl__default["default"].y().fieldN('Year'),
+        vl__default["default"].x().fieldQ('Participants')
+        .aggregate("count")
+          //.scale({ domain: [0, 1000] })
+          //.sort('descending')
+          .stack(true)
+          .title('Participants'),
+         vl__default["default"].color().fieldN('SendCountry')
+          //.scale({ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
+      ); 
+
+  const viz3 = stackedbar;
+
   //register vega and vegalite and tooltip 
   vl__default["default"].register(vega__default["default"], vegaLite__default["default"], {
     view: { renderer: "svg" },
@@ -175,7 +189,13 @@
       .autosize({ type: "fit", contains: "padding" })
       .config(config);
 
+      const marks2 = viz3
+      .data(await getData())
+      .autosize({ type: "fit", contains: "padding" })
+      .config(config);
+
     document.getElementById("matrix-viz").appendChild(await marks.render());
+    document.getElementById("stacked-bar").appendChild(await marks2.render());
   };
   run();
 

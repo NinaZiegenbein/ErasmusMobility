@@ -83,23 +83,8 @@ const barchart = vl
       .title("Participants")
   );
 
-  export const stackedbar = vl
-  .markBar({ tooltip: true })
-  .select(selection)
-  .transform(vl.filter(selection))
-  .encode(
-      vl.x().fieldQ('Participants')
-      .aggregate("count")
-        //.scale({ domain: [0, 1000] })
-        .sort('ascending')
-        .stack(true)
-        .title('Participants'),
-       vl.color().fieldN('RecCountry')
-        .scale({ range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd"] }) // custom colors
-    ); 
-
 export const viz = vl
-  .hconcat(matrixchart, barchart, stackedbar) //concatenation of visualizations
+  .hconcat(matrixchart, barchart) //concatenation of visualizations
   .params(
     // definition of parameters valid for both visualizations
     selection,

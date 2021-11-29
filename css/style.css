@@ -11,3 +11,8 @@ body{
     cursor: pointer;
     fill: grey;
 }
+.layout{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-column-gap: 2.5%;
+}

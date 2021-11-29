@@ -5,6 +5,7 @@ import { Handler } from "vega-tooltip";
 import { config } from "./config";
 import { getData } from "./getData";
 import { viz } from "./viz";
+import { viz3 } from "./viz3";
 //register vega and vegalite and tooltip 
 vl.register(vega, vegaLite, {
   view: { renderer: "svg" },
@@ -20,6 +21,12 @@ const run = async () => {
     .autosize({ type: "fit", contains: "padding" })
     .config(config);
 
+    const marks2 = viz3
+    .data(await getData())
+    .autosize({ type: "fit", contains: "padding" })
+    .config(config);
+
   document.getElementById("matrix-viz").appendChild(await marks.render());
+  document.getElementById("stacked-bar").appendChild(await marks2.render());
 };
 run();
