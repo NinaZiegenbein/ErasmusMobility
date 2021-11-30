@@ -10,7 +10,7 @@ const selection = vl
 
 //start of matrixchart
 const matrixchart = vl
-  .markRect({ tooltip: true })
+  .markRect()
   .view({fill:'#4E545B'})
   .select(selection) //changes selection in other chart
   .transform(
@@ -39,7 +39,7 @@ const matrixchart = vl
     as:"Number"
     }]).groupby(["SendCountry","RecCountry"]),
     // Calculating (x*y)/all_edges getting the expectancy value for each country <3
-    vl.calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy"),
+    vl.calculate("round((datum.x_in*datum.y_out)/datum.all_edges)").as("Expectancy"),
     vl.calculate("round(datum.Expectancy - datum.Number)").as("Deviation")
   )
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
@@ -61,7 +61,15 @@ const matrixchart = vl
         //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
         .title("Deviation from Expected"),
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
-    vl.stroke().if(selection, vl.value("black"))
+    vl.stroke().if(selection, vl.value("black")),
+    vl.tooltip([
+      {field:"SendCountry", type:"nominal", title:"Sending Country"},
+      {field:"RecCountry", type:"nominal", title:"Reciving  Country"},
+      {field:"Number", type:"quantitative", title: "Participants"},
+      {field:"Expectancy", type:"quantitative", title:" Expectancy value"},
+      {field:"Deviation", type:"quantitative", title: "Deviation from expectation"}
+      
+    ])
   );
 
 // bar chart for overview of number of participants over time

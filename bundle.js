@@ -47,7 +47,7 @@
 
   //start of matrixchart
   const matrixchart = vl__default["default"]
-    .markRect({ tooltip: true })
+    .markRect()
     .view({fill:'#4E545B'})
     .select(selection) //changes selection in other chart
     .transform(
@@ -76,7 +76,7 @@
       as:"Number"
       }]).groupby(["SendCountry","RecCountry"]),
       // Calculating (x*y)/all_edges getting the expectancy value for each country <3
-      vl__default["default"].calculate("(datum.x_in*datum.y_out)/datum.all_edges").as("Expectancy"),
+      vl__default["default"].calculate("round((datum.x_in*datum.y_out)/datum.all_edges)").as("Expectancy"),
       vl__default["default"].calculate("round(datum.Expectancy - datum.Number)").as("Deviation")
     )
     //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
@@ -98,7 +98,15 @@
           //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
           .title("Deviation from Expected"),
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
-      vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
+      vl__default["default"].stroke().if(selection, vl__default["default"].value("black")),
+      vl__default["default"].tooltip([
+        {field:"SendCountry", type:"nominal", title:"Sending Country"},
+        {field:"RecCountry", type:"nominal", title:"Reciving  Country"},
+        {field:"Number", type:"quantitative", title: "Participants"},
+        {field:"Expectancy", type:"quantitative", title:" Expectancy value"},
+        {field:"Deviation", type:"quantitative", title: "Deviation from expectation"}
+        
+      ])
     );
 
   // bar chart for overview of number of participants over time
