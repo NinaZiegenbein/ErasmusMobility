@@ -53,7 +53,7 @@ const matrixchart = vl
       .title("Receiving Country"),
     vl.color()
         .fieldQ("Expectancy")
-        .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+        .scale({type: "log", scheme: "rainbow", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
         //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
         .title("Expectancy Value"),
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered

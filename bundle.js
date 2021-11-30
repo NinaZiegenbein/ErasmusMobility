@@ -89,7 +89,7 @@
         .title("Receiving Country"),
       vl__default["default"].color()
           .fieldQ("Expectancy")
-          .scale({type: "log", scheme: "redblue", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+          .scale({type: "log", scheme: "rainbow", reverse:true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
           //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
           .title("Expectancy Value"),
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered

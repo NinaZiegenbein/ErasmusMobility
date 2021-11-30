@@ -16,6 +16,8 @@ body{
     
 }
 
-.vega-bindings{
-    padding-left: 50px;
+form.vega-bindings{
+  position: absolute;
+  right: 0px;
+  top: 0px;
 }
