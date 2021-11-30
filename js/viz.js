@@ -11,6 +11,7 @@ const selection = vl
 //start of matrixchart
 const matrixchart = vl
   .markRect({ tooltip: true })
+  .view({fill:'#4E545B'})
   .select(selection) //changes selection in other chart
   .transform(
       vl.filter("datum.Year == Year"), //filter for year according to slider
@@ -56,12 +57,13 @@ const matrixchart = vl
       .title("Receiving Country"),
     vl.color()
         .fieldQ("Deviation")
-        .scale({type: "symlog", scheme: "redblue", reverse: true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+        .scale({type: "symlog", scheme: "blueorange"}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
         //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
         .title("Deviation from Expected"),
     vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
     vl.stroke().if(selection, vl.value("black"))
   );
+
 // bar chart for overview of number of participants over time
 const barchart = vl
   .markBar({ tooltip: true })

@@ -24,6 +24,7 @@
         fontSize: 15,
         fill: dark
       }
+      
     }
   };
 
@@ -47,6 +48,7 @@
   //start of matrixchart
   const matrixchart = vl__default["default"]
     .markRect({ tooltip: true })
+    .view({fill:'#4E545B'})
     .select(selection) //changes selection in other chart
     .transform(
         vl__default["default"].filter("datum.Year == Year"), //filter for year according to slider
@@ -92,12 +94,13 @@
         .title("Receiving Country"),
       vl__default["default"].color()
           .fieldQ("Deviation")
-          .scale({type: "symlog", scheme: "redblue", reverse: true}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+          .scale({type: "symlog", scheme: "blueorange"}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
           //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
           .title("Deviation from Expected"),
       vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
       vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
     );
+
   // bar chart for overview of number of participants over time
   const barchart = vl__default["default"]
     .markBar({ tooltip: true })

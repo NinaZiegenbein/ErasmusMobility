@@ -15,5 +15,6 @@ export const config = {
       fontSize: 15,
       fill: dark
     }
+    
   }
 };
