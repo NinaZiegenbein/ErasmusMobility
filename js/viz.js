@@ -97,9 +97,9 @@ export const viz = vl
       // Value is max value of the slider
       // bind makes the slider, with min value, max value, interval
       
-     // vl.param('mindur').value(0).bind.slider(0,'datum.Duration',10),
+      //vl.param('mindur').value(0).bind.slider(0,'param.Duration',10),
       vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
-      vl.param('Age').value(40).bind(vl.slider(0, 40, 1)),
+      vl.param('Age').value(40).bind(vl.slider(vl.param('Age').value(0).bind(vl.slider(0,40,1)), 40, 1)),
       vl.param('Expectancy').value(false).bind(vl.menu(true, false)),
 
       
