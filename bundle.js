@@ -115,8 +115,9 @@
         .title("Participants")
     );
 
+   // Binding the sliders
   const viz = vl__default["default"]
-    .hconcat(matrixchart, barchart) //concatenation of visualizations
+    .hconcat(matrixchart,barchart) //concatenation of visualizations
     .params(
       // definition of parameters valid for both visualizations
       selection,
@@ -128,9 +129,16 @@
             .radio(".*", "Female", "Male", "Undefined")
             .labels("All", "Female", "Male", "Undefined")
         ),
+        // (param is name of slider)
+        // Value is max value of the slider
+        // bind makes the slider, with min value, max value, interval
+        
+       // vl.param('mindur').value(0).bind.slider(0,'datum.Duration',10),
         vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10)),
         vl__default["default"].param('Age').value(40).bind(vl__default["default"].slider(0, 40, 1)),
-        vl__default["default"].param('Expectancy').value(false).bind(vl__default["default"].menu(true, false))
+        vl__default["default"].param('Expectancy').value(false).bind(vl__default["default"].menu(true, false)),
+
+        
 
     );
 

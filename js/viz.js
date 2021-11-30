@@ -81,7 +81,7 @@ const barchart = vl
 
  // Binding the sliders
 export const viz = vl
-  .hconcat(matrixchart, barchart) //concatenation of visualizations
+  .hconcat(matrixchart,barchart) //concatenation of visualizations
   .params(
     // definition of parameters valid for both visualizations
     selection,
@@ -96,6 +96,8 @@ export const viz = vl
       // (param is name of slider)
       // Value is max value of the slider
       // bind makes the slider, with min value, max value, interval
+      
+     // vl.param('mindur').value(0).bind.slider(0,'datum.Duration',10),
       vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
       vl.param('Age').value(40).bind(vl.slider(0, 40, 1)),
       vl.param('Expectancy').value(false).bind(vl.menu(true, false)),

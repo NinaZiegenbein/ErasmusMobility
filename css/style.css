@@ -12,6 +12,11 @@ body{
 .vega-bindings:hover{
     cursor: pointer;
     fill: grey;
-    padding-left: 500px;
+   
     
+}
+
+.vega-bindings{
+    padding-left: 800px;
+    padding-bottom: -300px;
 }
