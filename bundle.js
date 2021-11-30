@@ -27,7 +27,7 @@
     }
   };
 
-  const csvUrl = "/erasmus14-19_fake.csv";
+  const csvUrl = "/erasmus14-19.csv";
 
   // get the data from local file storage with d3
   const getData = async () => {

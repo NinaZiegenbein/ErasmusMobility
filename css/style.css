@@ -11,3 +11,9 @@ body{
     cursor: pointer;
     fill: grey;
 }
+
+form.vega-bindings{
+  position: absolute;
+  right: 200px;
+  top: 710px;
+}
