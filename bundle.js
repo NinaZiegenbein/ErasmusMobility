@@ -77,7 +77,7 @@
       }]).groupby(["SendCountry","RecCountry"]),
       // Calculating (x*y)/all_edges getting the expectancy value for each country <3
       vl__default["default"].calculate("round((datum.x_in*datum.y_out)/datum.all_edges)").as("Expectancy"),
-      vl__default["default"].calculate("round(datum.Expectancy - datum.Number)").as("Deviation")
+      vl__default["default"].calculate("round(-(datum.Expectancy - datum.Number))").as("Deviation")
     )
     //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
     .encode(
