@@ -5,6 +5,8 @@ import { Handler } from "vega-tooltip";
 import { config } from "./config";
 import { getData } from "./getData";
 import { viz } from "./viz";
+import { viz2 } from "./viz2";
+
 //register vega and vegalite and tooltip 
 vl.register(vega, vegaLite, {
   view: { renderer: "svg" },
@@ -14,12 +16,20 @@ vl.register(vega, vegaLite, {
 });
 
 //get data and rendering
-const run = async () => {
+export const run = async function (state) {
   const marks = viz
     .data(await getData())
     .autosize({ type: "fit", contains: "padding" })
     .config(config);
 
-  document.getElementById("matrix-viz").appendChild(await marks.render());
+  const marks2 = viz2
+    .data(await getData())
+    .autosize({ type: "fit", contains: "padding" })
+    .config(config);
+  if (state == 1){
+      document.getElementById("matrix-viz1").appendChild(await marks.render())}
+  else if (state == 2){
+      document.getElementById("matrix-viz2").appendChild(await marks2.render())
+      };
 };
-run();
+run(2);

@@ -9,16 +9,29 @@
     <script src="https://unpkg.com/vega-lite@5.1.1/build/vega-lite.min.js"></script>
     <script src="https://unpkg.com/vega-lite-api@5.0.0/build/vega-lite-api.min.js"></script>
     <script src="https://unpkg.com/vega-tooltip@0.27.0/build/vega-tooltip.min.js"></script>
-    <script src="https://unpkg.com/d3@5.11.0/dist/d3.min.js"></script>    
+    <script src="https://unpkg.com/d3@5.11.0/dist/d3.min.js"></script> 
+    
+    <script src="bundle.js"></script>
+
   </head>
   <body>
       <h1>Erasmus Mobility</h1>
       <p>This visualization shows Erasmus Mobility of students from 2009 until 2019. <br>
       Clear the selection by double-clicking in the matrix-visualization.</p>
+      <a href="#" class="button" onClick="run(2);">
+        Absolute values</a>
+        <br>
+      <select href="#" name="matrix" onchange="run(2);">
+        <option value="1">Deviation</option>
+        <option value="2">Absolute</option>
+        </select>
+      <a href=></a>
       <section class = "layout">
-      <div id="matrix-viz">
+      <div id="matrix-viz1" >
+      </div>
+      <div id="matrix-viz2">
       </div>
     </section>
-    <script src="bundle.js"></script>
+    
   </body>
 </html>

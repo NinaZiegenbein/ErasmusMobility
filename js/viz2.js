@@ -11,7 +11,7 @@ const selection = vl
 //start of matrixchart
 const matrixchart = vl
   .markRect({ tooltip: true })
-  .view({fill:'#4E545B'})
+  .view({fill: "#4E545B"})
   .select(selection) //changes selection in other chart
   .transform(
       vl.filter("datum.Year == Year"), //filter for year according to slider
@@ -44,8 +44,6 @@ const matrixchart = vl
   )
   //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
   .encode(
-    vl.opacity().if(selection, vl.value(1)).value(0.1), //change opacity when selected
-    vl.stroke().if(selection, vl.value("black")),
     vl
       .x()
       .fieldO("SendCountry")
@@ -58,10 +56,15 @@ const matrixchart = vl
       .sort(vl.field("RecCountry"))
       .title("Receiving Country"),
     vl.color()
-      .fieldQ("Deviation").scale({type: "symlog", scheme: "blueorange"}))
-      //.fieldQ("Number")
-         // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
-    ;
+        .aggregate("count")
+        .fieldQ("Participants")
+        .scale({scheme: "blues"})
+        // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
+        //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
+        .title("Participants"),
+    vl.opacity().if(selection, vl.value(1)).value(0.3), //change opacity when hovered
+    vl.stroke().if(selection, vl.value("black"))  
+  );
 // bar chart for overview of number of participants over time
 const barchart = vl
   .markBar({ tooltip: true })
@@ -76,13 +79,13 @@ const barchart = vl
     vl
       .x()
       .aggregate("count")
-      .fieldQ("Number")
+      .fieldQ("Participants")
       .sort("ascending")
       .stack(true)
       .title("Participants")
   );
 
-export const viz = vl
+export const viz2 = vl
   .hconcat(matrixchart, barchart) //concatenation of visualizations
   .params(
     // definition of parameters valid for both visualizations
@@ -97,5 +100,8 @@ export const viz = vl
       ),
       vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
       vl.param('Age').value(40).bind(vl.slider(0, 40, 1)),
-      vl.param('Expectancy').value(true).bind(vl.menu(true, false))
+      vl.param('Expectancy').value(false).bind(vl.menu(true, false))
+
   );
+
+

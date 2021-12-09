@@ -13,6 +13,9 @@ export const config = {
     },
     "guide-title": {
       fontSize: 15,
+      fill: dark,
+    },
+    "view": {
       fill: dark
     }
     

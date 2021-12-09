@@ -1,6 +1,6 @@
 import { csv } from "d3";
 
-const csvUrl = "/erasmus14-19.csv";
+const csvUrl = "/erasmus14-19_fake.csv";
 
 // get the data from local file storage with d3
 export const getData = async () => {
