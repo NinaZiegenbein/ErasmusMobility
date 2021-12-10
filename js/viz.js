@@ -72,7 +72,7 @@ export const viz = vl
       ),
       vl.param('Duration').value(400).bind(vl.slider(0,400,10)),
       vl.param('Age').value(40).bind(vl.slider(0, 40, 1)),
-      vl.param('Expectancy').value(false).bind(vl.menu(true, false))
+      vl.param('Absolute Number ').value(false).bind(vl.menu(true, false))
 
   );
 
