@@ -144,7 +144,7 @@
         ),
         vl__default["default"].param('Duration').value(400).bind(vl__default["default"].slider(0,400,10)),
         vl__default["default"].param('Age').value(40).bind(vl__default["default"].slider(0, 40, 1)),
-        vl__default["default"].param('Expectancy').value(false).bind(vl__default["default"].menu(true, false))
+        vl__default["default"].param('Absolute Number ').value(false).bind(vl__default["default"].menu(true, false))
 
     );
 
