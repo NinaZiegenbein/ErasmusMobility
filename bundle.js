@@ -47,67 +47,28 @@
 
   //start of matrixchart
   const matrixchart = vl__default["default"]
-    .markRect()
-    .view({fill:'#4E545B'})
-    .select(selection) //changes selection in other chart
-    .transform(
-        vl__default["default"].filter("datum.Year == Year"), //filter for year according to slider
-        vl__default["default"].filter("test(regexp(Gender), datum.Gender)"), //filter for gender (radio buttons)
-        vl__default["default"].filter('datum.Duration <= Duration'),
-        vl__default["default"].filter('datum.Age <= Age'),
-      // count for x axis
-      vl__default["default"].joinaggregate([{op:"count",
-        field:"Participants",
-        as:"x_in"
-      }]).groupby(["RecCountry"]),
-      // Count for y axis
-      vl__default["default"].joinaggregate([{op:"count",
-        field:"Participants",
-        as:"y_out"
-      }]).groupby(["SendCountry"]),
-      // count for all the edges
-      vl__default["default"].joinaggregate([{op:"count",
-        field:"Participants",
-        as:"all_edges"
-      }]),
-      
-      vl__default["default"].joinaggregate([{op:"count",
-      field:"Participants",
-      as:"Number"
-      }]).groupby(["SendCountry","RecCountry"]),
-      // Calculating (x*y)/all_edges getting the expectancy value for each country <3
-      vl__default["default"].calculate("round((datum.x_in*datum.y_out)/datum.all_edges)").as("Expectancy"),
-      vl__default["default"].calculate("round(-(datum.Expectancy - datum.Number))").as("Deviation")
-    )
-    //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
-    .encode(
-      vl__default["default"]
-        .x()
-        .fieldO("SendCountry")
-        .sort(vl__default["default"].field("SendCountry"))
-        .title("Sending Country")
-        .axis({ orient: "top" }),
-      vl__default["default"]
-        .y()
-        .fieldO("RecCountry")
-        .sort(vl__default["default"].field("RecCountry"))
-        .title("Receiving Country"),
-      vl__default["default"].color()
-          .fieldQ("Deviation")
-          .scale({type: "symlog", scheme: "blueorange"}) // color schemes: https://vega.github.io/vega/docs/schemes/#diverging
-          //.condition({test: "Expectancy", title:"Expectancy Value"}) //condition if doesn't work, else does
-          .title("Deviation from Expected"),
-      vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
-      vl__default["default"].stroke().if(selection, vl__default["default"].value("black")),
-      vl__default["default"].tooltip([
-        {field:"SendCountry", type:"nominal", title:"Sending Country"},
-        {field:"RecCountry", type:"nominal", title:"Reciving  Country"},
-        {field:"Number", type:"quantitative", title: "Participants"},
-        {field:"Expectancy", type:"quantitative", title:" Expectancy value"},
-        {field:"Deviation", type:"quantitative", title: "Deviation from expectation"}
-        
-      ])
-    );
+      .markRect({ tooltip: true })
+      .select(selection) //changes selection in other chart
+      .transform(
+          vl__default["default"].filter("datum.Year == Year"), //filter for year according to slider
+      )
+      //encoding of x as Sending Country, y as Receiving Country and Color as number of participants
+      .encode(
+          vl__default["default"]
+              .x()
+              .fieldO("SendCountry")
+              .sort(vl__default["default"].field("SendCountry"))
+              .title("Sending Country")
+              .axis({ orient: "top" }),
+          vl__default["default"]
+              .y()
+              .fieldO("RecCountry")
+              .sort(vl__default["default"].field("RecCountry"))
+              .title("Receiving Country"),
+          vl__default["default"].color().aggregate("count").fieldQ("Participants").scale({scheme: "blues", type: "log"}).title("Participants"), // diverging color scale 'blueorange',
+          vl__default["default"].opacity().if(selection, vl__default["default"].value(1)).value(0.3), //change opacity when hovered
+          vl__default["default"].stroke().if(selection, vl__default["default"].value("black"))
+      );
 
   // bar chart for overview of number of participants over time
   const barchart = vl__default["default"]
